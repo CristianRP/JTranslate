@@ -1,0 +1,346 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.umg;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author alumno
+ */
+public class AdminView extends javax.swing.JFrame {
+
+    private ArrayList<Palabra> palabras = new ArrayList<>();
+    private ArrayList<Palabra> palabrasOld = new ArrayList<>();
+    DefaultTableModel model;
+
+    /**
+     * Creates new form AdminView
+     */
+    public AdminView() {
+        initComponents();
+        setLocationRelativeTo(null);
+        readFile("palabras.txt");
+        setData(palabrasOld);
+    }
+
+    public void makeFileWords() {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter("palabras.txt", true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            if (jtfEspanol.getText().isEmpty() && jtfEspanol.getText().isEmpty()
+                    && jtfFrances.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar todos los datos!");
+                return;
+            }
+            Palabra palabra = new Palabra(jtfEspanol.getText().toLowerCase(),
+                    jtfIngles.getText().toLowerCase(),
+                    jtfFrances.getText().toLowerCase());
+            palabras.add(palabra);
+            for (Palabra p : palabras) {
+                //bufferedWriter.write( + "\n");
+                bufferedWriter.write(p.getEspanol() + " " + p.getIngles() + " " + p.getFrances() + ",");
+            }
+            print("Archivo de palabras creado!!");
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            palabras.clear();
+            jtfEspanol.setText("");
+            jtfIngles.setText("");
+            jtfFrances.setText("");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }
+
+    private void print(String message) {
+        System.out.println(message);
+    }
+
+    public void setData(ArrayList<Palabra> palabrasArray) {
+        model = (DefaultTableModel) jTablePalabras.getModel();
+        Object[] fila = new Object[model.getColumnCount()];
+        int filas = model.getRowCount();
+        for (int i = filas - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
+        for (int i = 0; i < palabrasArray.size(); i++) {
+            fila[0] = palabrasArray.get(i).getEspanol();
+            fila[1] = palabrasArray.get(i).getIngles();
+            fila[2] = palabrasArray.get(i).getFrances();
+            model.addRow(fila);
+        }
+    }
+
+    void limpiartabla() {
+        model = (DefaultTableModel) jTablePalabras.getModel();
+        int a = model.getRowCount() - 1;
+        System.out.println(a);
+        for (int i = a; i >= 0; i--) {
+            System.out.println(i);
+            model.removeRow(i);
+        }
+    }
+    
+    
+
+    public void readFile(String url) {
+        BufferedReader r;
+        try {
+            File txt = new File(url);
+            r = new BufferedReader(new FileReader(txt));
+            String line = null;
+            while ((line = r.readLine()) != null) {
+                String[] obj = line.split(",");
+                for (int i = 0; i < obj.length; i++) {
+                    System.out.print("" + obj[i] + "\n");
+                    String palabra[] = obj[i].split(" ");
+                    for (int x = 0; x < palabra.length; x++) {
+                        System.out.print("" + palabra[x] + "\n");
+                        Palabra p = new Palabra(
+                                palabra[0],
+                                palabra[1],
+                                palabra[2]
+                        );
+                        palabrasOld.add(p);
+                        break;
+                    }
+                }
+            }
+            r.close();
+        } catch (Exception ex) {
+            Logger.getLogger(AdminView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jtfEspanol = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jtfIngles = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jtfFrances = new javax.swing.JTextField();
+        jButtonAgregar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTablePalabras = new javax.swing.JTable();
+        jButtonBusqueda = new javax.swing.JButton();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(820, 490));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel1.setText("Español");
+
+        jLabel2.setText("Ingles");
+
+        jLabel3.setText("Frances");
+
+        jButtonAgregar.setText("Agregar palabra");
+        jButtonAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAgregarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jtfEspanol, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jtfFrances, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jtfIngles, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonAgregar)
+                        .addGap(57, 57, 57))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtfEspanol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jtfIngles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAgregar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtfFrances, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        jTablePalabras.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Español", "Ingles", "Frances"
+            }
+        ));
+        jScrollPane2.setViewportView(jTablePalabras);
+
+        jButtonBusqueda.setText("Modo busqueda");
+        jButtonBusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBusquedaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonBusqueda)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonBusqueda)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarActionPerformed
+        makeFileWords();
+        limpiartabla();
+        palabrasOld.clear();
+        readFile("palabras.txt");
+        setData(palabrasOld);
+    }//GEN-LAST:event_jButtonAgregarActionPerformed
+
+    private void jButtonBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBusquedaActionPerformed
+        this.dispose();
+        new UserView().setVisible(true);
+    }//GEN-LAST:event_jButtonBusquedaActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AdminView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AdminView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AdminView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdminView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AdminView().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAgregar;
+    private javax.swing.JButton jButtonBusqueda;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTablePalabras;
+    private javax.swing.JTextField jtfEspanol;
+    private javax.swing.JTextField jtfFrances;
+    private javax.swing.JTextField jtfIngles;
+    // End of variables declaration//GEN-END:variables
+}
